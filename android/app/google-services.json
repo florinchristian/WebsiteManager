@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1069043302411",
+    "project_id": "portofolio-messaging",
+    "storage_bucket": "portofolio-messaging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069043302411:android:5a284b1746ac96fb6b470e",
+        "android_client_info": {
+          "package_name": "com.websitemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1069043302411-cciumjg4m6fr3lfqkhjtat8q7uckpsk3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATCvynE-5RRkzFbu1Ihibf7SjYuK94ln0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1069043302411-cciumjg4m6fr3lfqkhjtat8q7uckpsk3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
