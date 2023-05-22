@@ -7,9 +7,10 @@ import {
 } from "react-native";
 import Message from "../model/Message";
 
-type MessageCardProps = {
-  message: Message
-};
+// @ts-ignore
+import Entypo from "react-native-vector-icons/dist/Entypo";
+// @ts-ignore
+import MaterialCommunityIcons from "react-native-vector-icons/dist/MaterialCommunityIcons";
 
 const styles = StyleSheet.create({
   container: {
@@ -44,12 +45,23 @@ const styles = StyleSheet.create({
   },
   actionButtonContainer: {
     flex: 1,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between"
-  }
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
 });
 
-const MessageCard: React.FC<MessageCardProps> = ({message}) => {
+type MessageCardProps = {
+  message: Message
+  replyCallback: (message: Message) => void,
+  deleteCallback: (message: Message) => void
+};
+
+const MessageCard: React.FC<MessageCardProps> = ({message, replyCallback, deleteCallback}) => {
   return(
     <View style={styles.container}>
       <View style={styles.body}>
@@ -60,12 +72,32 @@ const MessageCard: React.FC<MessageCardProps> = ({message}) => {
         <Text style={styles.message}>{message.message}</Text>
 
         <View style={styles.actionButtonContainer}>
-          <TouchableOpacity>
-            <Text>Reply</Text>
+          <TouchableOpacity onPress={() => replyCallback(message)} style={[styles.actionButton, {
+            backgroundColor: "white",
+            paddingVertical: 7,
+            paddingHorizontal: 15,
+            borderRadius: 5
+          }]}>
+            <Entypo style={{
+              marginRight: 5
+            }} color={"black"} name={"reply"}/>
+            <Text style={{
+              color: "black"
+            }}>Reply</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity>
-            <Text>Delete</Text>
+          <TouchableOpacity onPress={() => deleteCallback(message)} style={[styles.actionButton, {
+            backgroundColor: "#ff3333",
+            paddingVertical: 7,
+            paddingHorizontal: 15,
+            borderRadius: 5
+          }]}>
+            <MaterialCommunityIcons style={{
+              marginRight: 5
+            }} color={"white"} name={"delete-forever-outline"} />
+            <Text style={{
+              color: "white",
+            }}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>

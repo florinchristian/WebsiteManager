@@ -1,18 +1,12 @@
-class Subscriber {
-  private deviceUUID: string;
-  private deviceToken: string;
+import BaseModel from "./BaseModel";
+
+class Subscriber extends BaseModel{
+  public readonly deviceToken: string;
 
   constructor(deviceUUID: string, deviceToken: string) {
-    this.deviceUUID = deviceUUID;
+    super(deviceUUID);
+
     this.deviceToken = deviceToken;
-  }
-
-  public getDeviceUUID(): string {
-    return this.deviceUUID;
-  }
-
-  public getDeviceToken(): string {
-    return this.deviceToken;
   }
 }
 

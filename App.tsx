@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     SafeAreaView,
     View,
@@ -19,6 +19,7 @@ import Subscriber from "./src/model/Subscriber";
 import SubscribersService from "./src/services/SubscribersService";
 
 import LinearGradient from "react-native-linear-gradient";
+import message from "./src/model/Message";
 
 const styles = StyleSheet.create({
     container: {
@@ -28,10 +29,7 @@ const styles = StyleSheet.create({
     header: {
         padding: 20,
         borderBottomColor: "rgba(255, 255, 255, 0.63)",
-        borderBottomWidth: 1,
-        // borderBottomStyle: "solid",
-        // borderBottomColor: "#d0d0d0",
-        // borderBottomWidth: 2
+        borderBottomWidth: 1
     },
     title: {
         color: "white",
@@ -41,7 +39,11 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>([])
+    const [messagesAreRefreshing, setMessagesAreRefreshing] = useState<boolean>(true);
+
+    const messagesService = useRef(new MessagesService());
+    const subscriberService = useRef(new SubscribersService());
 
     const requestUserPermission = async () => {
         await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -51,16 +53,28 @@ const App = () => {
         const deviceToken = await messaging().getToken();
         const subscriber = new Subscriber(DeviceInfo.getUniqueIdSync(), deviceToken);
 
-        const subscriberService = new SubscribersService();
-        subscriberService.save(subscriber);
+        subscriberService.current.save(subscriber);
     };
 
     const loadMessages = async () => {
-        const messagesService = new MessagesService();
-        const messages = await messagesService.fetch();
+        setMessagesAreRefreshing(true);
+
+        const messages: Message[] = await messagesService.current.fetch();
 
         setMessages(messages);
+
+        setMessagesAreRefreshing(false);
     };
+
+    const replyCallback = (message: Message) => {
+        console.log("reply message", message);
+    };
+
+    const deleteCallback = async (message: Message) => {
+        await messagesService.current.delete(message);
+
+        setMessages(messages.filter(msg => msg.id != message.id));
+    }
 
     useEffect(() => {
         requestUserPermission();
@@ -75,9 +89,18 @@ const App = () => {
                    <Text style={styles.title}>Inbox</Text>
                </View>
 
-               <FlatList data={messages} renderItem={({item}) => (
-                   <MessageCard message={item}/>
-               )}/>
+               <FlatList
+                 data={messages}
+                 refreshing={messagesAreRefreshing}
+                 onRefresh={() => loadMessages()}
+                 renderItem={({item}) => (
+                   <MessageCard
+                     message={item}
+                     replyCallback={(message) => replyCallback(message)}
+                     deleteCallback={(message) => deleteCallback(message)}
+                   />
+                 )}
+               />
            </SafeAreaView>
        </LinearGradient>
     );
