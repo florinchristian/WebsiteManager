@@ -2,7 +2,7 @@ import axios from "axios/index";
 
 abstract class BaseService<Model> {
   protected getBasePath(): string {
-    return "http://192.168.168.163:6969";
+    return "http://192.168.0.118:6969";
   }
 
   public fetch: () => Promise<Model[]> = async () => {
